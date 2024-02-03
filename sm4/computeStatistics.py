@@ -37,9 +37,6 @@ class ComputeStatistics:
             Calculate all statistical data
         """
         median = 0
-        mod = 0
-        sd = 0
-        variance = 0
         count = len(data)
         mean = sum(data) / count
 
@@ -62,7 +59,6 @@ class ComputeStatistics:
 
         max_frequency = max(frequencies.values())
         mode = [number for number, frequency in frequencies.items() if frequency == max_frequency]
-        mod=max(mode)
 
         # Calculate the variance
         variance = sum((x - mean) ** 2 for x in data) / (count -  1)
@@ -74,7 +70,7 @@ class ComputeStatistics:
             "count":  count,
             "mean": round(mean, self.decimals),
             "median": median,
-            "mod": mod,
+            "mod": max(mode),
             "sd": round(sd, self.decimals),
             "variance": round(variance, self.decimals)
         }
@@ -124,4 +120,4 @@ if __name__ == '__main__':
     compute_statistics.operation()
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f"\nTime elapsed: {round(elapsed_time, 4)} seconds\n")
+    print(f"\nTime elapsed: {round(elapsed_time, 8)} seconds\n")
