@@ -12,18 +12,17 @@ class ComputeStatistics:
     """
 
 
-    def __init__(self, file_name):
+    def __init__(self):
         self.decimals = 4
         self.file_name_save = "StatisticsResults.txt"
-        self.file_name = file_name
 
 
-    def get_file_data(self):
+    def get_file_data(self, file_name):
         """
             Extracts the data from the given file and returns it in an array
         """
         data = []
-        with open(self.file_name, 'r', encoding="utf-8") as file:
+        with open(file_name, 'r', encoding="utf-8") as file:
             data = [float(line.strip()) for line in file]
         return data
 
@@ -92,24 +91,23 @@ class ComputeStatistics:
         :param file_name: File name to read.
         """
         try:
-            if not self.file_name:
-                self.file_name = input("File name: ")
-            file_data = self.get_file_data()
+            if len(sys.argv) != 2:
+                file_name = input("File name: ")
+            else:
+                file_name = sys.argv[1]
+            file_data = self.get_file_data(file_name)
             statics = self.get_statics(file_data)
             self.set_print_statics(statics)
             self.set_save_statics(statics)
         except FileNotFoundError:
-            print(f"Error: File '{self.file_name}' not found.")
+            print(f"Error: File '{file_name}' not found.")
         except ValueError as e:
             print(e)
 
 
 if __name__ == '__main__':
     start_time = time.time()
-    file_name = None
-    if len(sys.argv) == 2:
-        file_name = sys.argv[1]
-    compute_statistics = ComputeStatistics(file_name)
+    compute_statistics = ComputeStatistics()
     compute_statistics.operation()
     end_time = time.time()
     elapsed_time = end_time - start_time
