@@ -13,7 +13,7 @@ class ComputeStatistics:
 
 
     def __init__(self):
-        self.decimals = 4
+        self.decimals = 6
         self.file_name_save = "StatisticsResults.txt"
 
 
@@ -23,7 +23,12 @@ class ComputeStatistics:
         """
         data = []
         with open(file_name, 'r', encoding="utf-8") as file:
-            data = [float(line.strip()) for line in file]
+            for line in file:
+                try:
+                    number = float(line.strip())
+                except ValueError:
+                    number = 0
+                data.append(number)
         return data
 
 
@@ -48,8 +53,16 @@ class ComputeStatistics:
             median = sorted_data[count // 2]
 
         # Calculate the mode
-        frequencies = {number: data.count(number) for number in set(data)}
-        mod = max(frequencies, key=frequencies.get)
+        frequencies = {}
+        for number in data:
+            if number in frequencies:
+                frequencies[number] += 1
+            else:
+                frequencies[number] = 1
+
+        max_frequency = max(frequencies.values())
+        mode = [number for number, frequency in frequencies.items() if frequency == max_frequency]
+        mod=max(mode)
 
         # Calculate the variance
         variance = sum((x - mean) ** 2 for x in data) / (count -  1)
@@ -59,7 +72,7 @@ class ComputeStatistics:
 
         statics = {
             "count":  count,
-            "mean": mean,
+            "mean": round(mean, self.decimals),
             "median": median,
             "mod": mod,
             "sd": round(sd, self.decimals),
