@@ -3,7 +3,6 @@ compute_statistics.py
 
 Basic statistics are calculated from the data of the given file.
 """
-from statistics import mode as modee
 
 class ComputeStatistics:
     """
@@ -81,7 +80,6 @@ class ComputeStatistics:
         """
             Save result data to a file
         """
-        self.file_name_save
         with open(self.file_name_save, 'w', encoding="utf-8") as file:
             for clave, valor in data.items():
                 file.write(f"{clave.upper()}: {valor}" + "\n")
