@@ -22,24 +22,28 @@ class ComputeStatistics:
             data = [line.strip() for line in file]
         return data
 
-    def decimal_to_binary(self, decimal):
-        if decimal < 0:
-            return "Negative numbers are not supported"
-        elif decimal == 0:
-            return "0b0"
+    def decimal_to_binary(self, numero, bits = 10):
+        if numero == 0:
+            return '0'
 
-        binary_digits = []
+        resultado = ['0'] * bits
+        es_negativo = numero < 0
 
-        while decimal > 0:
-            remainder = decimal % 2
-            binary_digits.append(str(remainder))
-            decimal //= 2
+        if es_negativo:
+            numero = 2 ** bits + numero
 
-        binary_digits.reverse()
-        binary_str = "0b" + "".join(binary_digits)
+        for i in range(bits - 1, -1, -1):
+            if numero >= 2 ** i:
+                resultado[bits - i - 1] = '1'
+                numero -= 2 ** i
+        
+        resultado_str  = ''.join(resultado)
 
-        return binary_str
-    
+        if not es_negativo:
+            resultado_str = resultado_str.lstrip('0') or '0'
+
+        return resultado_str 
+
     def decimal_to_hexadecimal(self, decimal):
         if decimal < 0:
             return "Los números negativos no son compatibles"
