@@ -34,6 +34,7 @@ class ComputeStatistics:
         for word in data:
             word = word.lower()
             results[word] = results.get(word, 0) + 1
+        results["Grant Total"] = len(data)
         return results
 
 
@@ -46,7 +47,6 @@ class ComputeStatistics:
         for word, frequency in data.items():
             concatenation = f'{word} {frequency}'
             print(concatenation)
-        print(f"\nGrant Total {len(data)}")
 
 
     def set_save_count_words(self, data):
@@ -58,7 +58,6 @@ class ComputeStatistics:
             for word, frequency in data.items():
                 concatenation = f'{word} {frequency}'
                 file.write(concatenation + "\n")
-            file.write(f"Grant Total {len(data)}")
 
 
     def operation(self):
