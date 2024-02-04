@@ -25,6 +25,9 @@ class ComputeStatistics:
 
 
     def decimal_to_binary(self, numero, bits = 10):
+        """
+            Convert integer numbers to binary
+        """
         if numero == 0:
             return '0'
 
@@ -38,16 +41,19 @@ class ComputeStatistics:
             if numero >= 2 ** i:
                 resultado[bits - i - 1] = '1'
                 numero -= 2 ** i
-        
+
         resultado_str  = ''.join(resultado)
 
         if not es_negativo:
             resultado_str = resultado_str.lstrip('0') or '0'
 
-        return resultado_str 
+        return resultado_str
 
 
     def decimal_to_hexadecimal(self, numero, bits = 32):
+        """
+            Convert integer numbers to hexadecimal
+        """
         if numero == 0:
             return '0'
 
@@ -66,7 +72,7 @@ class ComputeStatistics:
 
         resultado_str = ''.join(resultado[32 - len(resultado) + primer_bit:])
 
-        # Eliminar ceros a la izquierda en enteros positivos
+        # Remove leading zeros in positive integers
         if not es_negativo:
             resultado_str = resultado_str.lstrip('0') or '0'
 
@@ -84,9 +90,9 @@ class ComputeStatistics:
             data = None
             try:
                 number = int(num)
-                bin = self.decimal_to_binary(number)
-                hex = self.decimal_to_hexadecimal(number)
-                data = [number, bin, hex]
+                binary = self.decimal_to_binary(number)
+                hexadecimal = self.decimal_to_hexadecimal(number)
+                data = [number, binary, hexadecimal]
             except ValueError:
                 number = num
                 err = "#VALUE!"
