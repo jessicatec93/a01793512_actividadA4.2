@@ -1,4 +1,7 @@
 """
+Alumno: Jessica Lechuga Ramos
+Matrícula: A01793512
+
 The numbers must be converted to binary
 """
 import sys

@@ -1,5 +1,6 @@
 """
-computeStatistics.py
+Alumno: Jessica Lechuga Ramos
+Matrícula: A01793512
 
 Basic statistics are calculated from the data of the given file.
 """
