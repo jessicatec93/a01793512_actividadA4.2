@@ -24,7 +24,7 @@ class ComputeStatistics:
         return data
 
 
-    def decimal_to_binary(self, numero, bits = 10):
+    def decimal_to_binary(self, numero, bits = 32):
         """
             Convert integer numbers to binary
         """
