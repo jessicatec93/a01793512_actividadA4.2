@@ -13,6 +13,7 @@ class ComputeStatistics:
         self.file_name_save = "ConvertionResults.txt"
         self.title = ["NUMBER", "BIN", "HEX"]
 
+
     def get_file_data(self, file_name):
         """
             Extracts the data from the given file and returns it in an array
@@ -21,6 +22,7 @@ class ComputeStatistics:
         with open(file_name, 'r', encoding="utf-8") as file:
             data = [line.strip() for line in file]
         return data
+
 
     def decimal_to_binary(self, numero, bits = 10):
         if numero == 0:
@@ -44,24 +46,34 @@ class ComputeStatistics:
 
         return resultado_str 
 
-    def decimal_to_hexadecimal(self, decimal):
-        if decimal < 0:
-            return "Los números negativos no son compatibles"
-        elif decimal == 0:
-            return "0x0"
 
-        hexadecimal_digits = []
-        hex_characters = "0123456789ABCDEF"
+    def decimal_to_hexadecimal(self, numero, bits = 32):
+        if numero == 0:
+            return '0'
 
-        while decimal > 0:
-            remainder = decimal % 16
-            hexadecimal_digits.append(hex_characters[remainder])
-            decimal //= 16
+        resultado = ['0'] * bits
+        es_negativo = numero < 0
 
-        hexadecimal_digits.reverse()
-        hexadecimal_str = "0x" + "".join(hexadecimal_digits)
+        if es_negativo:
+            numero = 2 ** bits + numero
 
-        return hexadecimal_str
+        primer_bit = True
+        for i in range(bits - 1, -1, -1):
+            if numero >= 2 ** i:
+                resultado[bits - i - 1] = '1'
+                numero -= 2 ** i
+                primer_bit = False
+
+        resultado_str = ''.join(resultado[32 - len(resultado) + primer_bit:])
+
+        # Eliminar ceros a la izquierda en enteros positivos
+        if not es_negativo:
+            resultado_str = resultado_str.lstrip('0') or '0'
+
+        hex_resultado = hex(int(resultado_str, 2))[2:]
+
+        return hex_resultado.upper()
+
 
     def get_binary_data(self, data):
         """
@@ -82,6 +94,7 @@ class ComputeStatistics:
             results.append(data)
         return results
 
+
     def set_print_binary_data(self, data):
         """
             Print result data to a file
@@ -91,6 +104,7 @@ class ComputeStatistics:
         for valor in data:
             print(" ".join(map(str, valor)))
 
+
     def set_save_binary_data(self, data):
         """
             Save result data to a file
@@ -99,6 +113,7 @@ class ComputeStatistics:
             file.write(" ".join(self.title) + "\n")
             for valor in data:
                 file.write(" ".join(map(str, valor)) + "\n")
+
 
     def operation(self):
         """
@@ -117,6 +132,7 @@ class ComputeStatistics:
             print(f"Error: File '{file_name}' not found.")
         except ValueError as e:
             print(e)
+
 
 if __name__ == '__main__':
     start_time = time.time()
