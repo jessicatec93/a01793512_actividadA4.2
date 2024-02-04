@@ -12,7 +12,9 @@ class ComputeStatistics:
     """
 
     def __init__(self):
-        self.file_name_save = "StatisticsResults.txt"
+        self.file_name_save = "WordCountResults.txt"
+        self.title = ["Row Labels",	"Count Word"]
+
 
     def get_file_data(self, file_name):
         """
@@ -20,38 +22,44 @@ class ComputeStatistics:
         """
         data = []
         with open(file_name, 'r', encoding="utf-8") as file:
-            data = [float(line.strip()) for line in file]
+            data = [line.strip() for line in file]
         return data
 
-    def get_statics(self, data):
+
+    def get_count_words(self, data):
         """
             Calculate all statistical data
         """
-        statics = {
-            "count":  data[0],
-            "mean": 0,
-            "median": 0,
-            "mod": 0,
-            "sd": 0,
-            "variance": 0
-        }
-        return statics
+        results = {}
+        for word in data:
+            word = word.lower()
+            results[word] = results.get(word, 0) + 1
+        return results
 
-    def set_print_statics(self, data):
+
+    def set_print_count_words(self, data):
         """
             Print result data to a file
         """
         print("\nRESULTS")
-        for clave, valor in data.items():
-            print(f"{clave.upper()}: {valor}")
+        print(" ".join(self.title) + "\n")
+        for word, frequency in data.items():
+            concatenation = f'{word} {frequency}'
+            print(concatenation)
+        print(f"\nGrant Total {len(data)}")
 
-    def set_save_statics(self, data):
+
+    def set_save_count_words(self, data):
         """
             Save result data to a file
         """
         with open(self.file_name_save, 'w', encoding="utf-8") as file:
-            for clave, valor in data.items():
-                file.write(f"{clave.upper()}: {valor}" + "\n")
+            file.write(" ".join(self.title) + "\n")
+            for word, frequency in data.items():
+                concatenation = f'{word} {frequency}'
+                file.write(concatenation + "\n")
+            file.write(f"Grant Total {len(data)}")
+
 
     def operation(self):
         """
@@ -63,13 +71,14 @@ class ComputeStatistics:
             else:
                 file_name = sys.argv[1]
             file_data = self.get_file_data(file_name)
-            statics = self.get_statics(file_data)
-            self.set_print_statics(statics)
-            self.set_save_statics(statics)
+            count_words = self.get_count_words(file_data)
+            self.set_print_count_words(count_words)
+            self.set_save_count_words(count_words)
         except FileNotFoundError:
             print(f"Error: File '{file_name}' not found.")
         except ValueError as e:
             print(e)
+
 
 if __name__ == '__main__':
     start_time = time.time()
