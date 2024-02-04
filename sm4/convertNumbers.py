@@ -24,61 +24,61 @@ class ComputeStatistics:
         return data
 
 
-    def decimal_to_binary(self, numero, bits = 32):
+    def decimal_to_binary(self, number, bits = 32):
         """
             Convert integer numbers to binary
         """
-        if numero == 0:
+        if number == 0:
             return '0'
 
-        resultado = ['0'] * bits
-        es_negativo = numero < 0
+        result = ['0'] * bits
+        is_negative = number < 0
 
-        if es_negativo:
-            numero = 2 ** bits + numero
+        if is_negative:
+            number = 2 ** bits + number
 
         for i in range(bits - 1, -1, -1):
-            if numero >= 2 ** i:
-                resultado[bits - i - 1] = '1'
-                numero -= 2 ** i
+            if number >= 2 ** i:
+                result[bits - i - 1] = '1'
+                number -= 2 ** i
 
-        resultado_str  = ''.join(resultado)
+        result_str  = ''.join(result)
 
-        if not es_negativo:
-            resultado_str = resultado_str.lstrip('0') or '0'
+        if not is_negative:
+            result_str = result_str.lstrip('0') or '0'
 
-        return resultado_str
+        return result_str
 
 
-    def decimal_to_hexadecimal(self, numero, bits = 32):
+    def decimal_to_hexadecimal(self, number, bits = 32):
         """
             Convert integer numbers to hexadecimal
         """
-        if numero == 0:
+        if number == 0:
             return '0'
 
-        resultado = ['0'] * bits
-        es_negativo = numero < 0
+        result = ['0'] * bits
+        is_negative = number < 0
 
-        if es_negativo:
-            numero = 2 ** bits + numero
+        if is_negative:
+            number = 2 ** bits + number
 
-        primer_bit = True
+        first_bit = True
         for i in range(bits - 1, -1, -1):
-            if numero >= 2 ** i:
-                resultado[bits - i - 1] = '1'
-                numero -= 2 ** i
-                primer_bit = False
+            if number >= 2 ** i:
+                result[bits - i - 1] = '1'
+                number -= 2 ** i
+                first_bit = False
 
-        resultado_str = ''.join(resultado[32 - len(resultado) + primer_bit:])
+        result_str = ''.join(result[32 - len(result) + first_bit:])
 
         # Remove leading zeros in positive integers
-        if not es_negativo:
-            resultado_str = resultado_str.lstrip('0') or '0'
+        if not is_negative:
+            result_str = result_str.lstrip('0') or '0'
 
-        hex_resultado = hex(int(resultado_str, 2))[2:]
+        hex_result = hex(int(result_str, 2))[2:]
 
-        return hex_resultado.upper()
+        return hex_result.upper()
 
 
     def get_binary_data(self, data):
