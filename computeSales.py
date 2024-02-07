@@ -70,6 +70,9 @@ class ComputeSales:
             if product:
                 price = product[0]["price"] * sale_data["Quantity"]
             else:
+                print(
+                    f"""The product '{sale_data["Product"]}' was not found."""
+                )
                 price = 0
             sale = [
                 sale_data["Quantity"], sale_data["Product"],
