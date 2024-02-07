@@ -61,7 +61,8 @@ class ComputeSales:
                     results.append(["Total", round(total, self.decimal)])
                     total = 0
                 order = sale_data["SALE_ID"]
-                results.append(["\n" + sale_data["SALE_Date"], "Order", order])
+                results.append(["\n" + "Order", order])
+                results.append([sale_data["SALE_Date"]])
             product = [
                 product for product in product_data
                 if product["title"] == sale_data["Product"]
