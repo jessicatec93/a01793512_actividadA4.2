@@ -2,18 +2,21 @@
 Alumno: Jessica Lechuga Ramos
 Matrícula: A01793512
 
-Basic statistics are calculated from the data of the given file.
+Calculation of profits.
 """
+import json
 import sys
 import time
 
-class WordCount:
+class ComputeSales:
     """
-    Class to carry out state operations in a list of items.
+    Class to perform operations from two files that have sales.
     """
 
     def __init__(self):
-        self.file_name_save = "WordCountResults.txt"
+        self.start_time = time.time()
+        self.elapsed_time = None
+        self.file_name_save = "SalesResults.txt"
         self.title = ["Row Labels",	"Count Word"]
 
 
@@ -23,13 +26,13 @@ class WordCount:
         """
         data = []
         with open(file_name, 'r', encoding="utf-8") as file:
-            data = [line.strip() for line in file]
+            data = json.load(file)
         return data
 
 
-    def get_count_words(self, data):
+    def get_total_sales(self, products_file_data, sales_file_data):
         """
-            Calculate all statistical data
+            Bring sales totals
         """
         results = {}
         for word in data:
@@ -48,6 +51,9 @@ class WordCount:
         for word, frequency in data.items():
             concatenation = f'{word} {frequency}'
             print(concatenation)
+        end_time = time.time()
+        self.elapsed_time = end_time - self.start_time
+        print(f"\nTime elapsed: {round(self.elapsed_time, 4)} seconds\n")
 
 
     def set_save_count_words(self, data):
@@ -59,6 +65,7 @@ class WordCount:
             for word, frequency in data.items():
                 concatenation = f'{word} {frequency}'
                 file.write(concatenation + "\n")
+            file.write(f"\nTime elapsed: {round(self.elapsed_time, 4)} seconds\n")
 
 
     def operation(self):
@@ -66,24 +73,26 @@ class WordCount:
         :param file_name: File name to read.
         """
         try:
-            if len(sys.argv) != 2:
-                file_name = input("File name: ")
+            if len(sys.argv) != 3:
+                products_file_name = input("Products file name: ")
             else:
-                file_name = sys.argv[1]
-            file_data = self.get_file_data(file_name)
-            count_words = self.get_count_words(file_data)
-            self.set_print_count_words(count_words)
-            self.set_save_count_words(count_words)
+                products_file_name = sys.argv[1]
+            if len(sys.argv) != 3:
+                sales_file_name = input("Sales file name: ")
+            else:
+                sales_file_name = sys.argv[2]
+            products_file_data = self.get_file_data(products_file_name)
+            print(products_file_data)
+            sales_file_data = self.get_file_data(sales_file_name)
+            #total_sales = self.get_total_sales(products_file_data, sales_file_data)
+            #self.set_print_total_sales(count_words)
+            #self.set_save_total_sales(count_words)
         except FileNotFoundError:
-            print(f"Error: File '{file_name}' not found.")
+            print(f"Error: File '{products_file_name}' or '{sales_file_name}' not found.")
         except ValueError as e:
             print(e)
 
 
 if __name__ == '__main__':
-    start_time = time.time()
-    word_count = WordCount()
-    word_count.operation()
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"\nTime elapsed: {round(elapsed_time, 4)} seconds\n")
+    compute_sales = ComputeSales()
+    compute_sales.operation()

@@ -7,7 +7,7 @@ The numbers must be converted to binary
 import sys
 import time
 
-class ComputeStatistics:
+class ConvertNumbers:
     """
     Class to convert a number to binary on a list of elements.
     """
@@ -145,8 +145,8 @@ class ComputeStatistics:
 
 if __name__ == '__main__':
     start_time = time.time()
-    compute_statistics = ComputeStatistics()
-    compute_statistics.operation()
+    convert_numbers = ConvertNumbers()
+    convert_numbers.operation()
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"\nTime elapsed: {round(elapsed_time, 4)} seconds\n")
