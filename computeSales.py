@@ -8,6 +8,24 @@ import json
 import sys
 import time
 
+from typing import TypedDict
+
+class salesJSON(TypedDict):
+    SALE_ID: int
+    SALE_Date: str
+    Product: str
+    Quantity: int
+
+class productJSON(TypedDict):
+    title: str
+    type: str
+    description: str
+    filename: str
+    height: int
+    width: int
+    price: float
+    rating: int
+
 class ComputeSales:
     """
     Class to perform operations from two files that have sales.
@@ -16,56 +34,84 @@ class ComputeSales:
     def __init__(self):
         self.start_time = time.time()
         self.elapsed_time = None
+        self.decimal = 2
+        self.decimal_time = 4
         self.file_name_save = "SalesResults.txt"
-        self.title = ["Row Labels",	"Count Word"]
 
 
     def get_file_data(self, file_name):
         """
-            Extracts the data from the given file and returns it in an array
+        Extracts the data from the given file and returns it in a dictionary
         """
-        data = []
+        objeto_json = None
         with open(file_name, 'r', encoding="utf-8") as file:
             data = json.load(file)
-        return data
+
+        # Check if the first item in the list is sales or products
+        if 'SALE_ID' in data[0]:
+            try:
+                objeto_json = {"sales": [salesJSON(**item) for item in data]}
+            except ValueError as e:
+                print("Error al procesar datos de ventas:", e)
+        elif 'title' in data[0]:
+            try:
+                objeto_json = {"products": [productJSON(**item) for item in data]}
+            except ValueError as e:
+                print("Error al procesar datos de productos:", e)
+        else:
+            print("No se puede determinar el tipo de datos")
+
+        return objeto_json
 
 
-    def get_total_sales(self, products_file_data, sales_file_data):
+    def get_total_sales(self, data):
         """
             Bring sales totals
         """
-        results = {}
-        for word in data:
-            word = word.lower()
-            results[word] = results.get(word, 0) + 1
-        results["Grant Total"] = len(data)
+        results = []
+        totals = 0
+        total = 0
+        order = 0
+        product_data = data["products"]
+        sales_data = data["sales"]
+        for sale_data in sales_data:
+            if order != sale_data["SALE_ID"]:
+                if order != 0:
+                    results.append(["Total", round(total, self.decimal)])
+                    total = 0
+                order = sale_data["SALE_ID"]
+                results.append(["\n" + sale_data["SALE_Date"], "Order", order])
+            product = [product for product in product_data if product["title"] == sale_data["Product"]][0]
+            price = product["price"] * sale_data["Quantity"]
+            sale = [sale_data["Quantity"], sale_data["Product"], round(price, self.decimal)]
+            results.append(sale)
+            total += price
+            totals += price
+        results.append(["Total", round(total, self.decimal)])
+        results.append(["\n\nTotal of all orders", round(totals, self.decimal)])
         return results
 
 
-    def set_print_count_words(self, data):
+    def set_print_total_sales(self, data):
         """
             Print result data to a file
         """
         print("\nRESULTS")
-        print(" ".join(self.title) + "\n")
-        for word, frequency in data.items():
-            concatenation = f'{word} {frequency}'
-            print(concatenation)
+        for valor in data:
+               print(" ".join(map(str, valor)) + "\n")
         end_time = time.time()
         self.elapsed_time = end_time - self.start_time
-        print(f"\nTime elapsed: {round(self.elapsed_time, 4)} seconds\n")
+        print(f"\nTime elapsed: {round(self.elapsed_time, self.decimal_time)} seconds\n")
 
 
-    def set_save_count_words(self, data):
+    def set_save_total_sales(self, data):
         """
             Save result data to a file
         """
         with open(self.file_name_save, 'w', encoding="utf-8") as file:
-            file.write(" ".join(self.title) + "\n")
-            for word, frequency in data.items():
-                concatenation = f'{word} {frequency}'
-                file.write(concatenation + "\n")
-            file.write(f"\nTime elapsed: {round(self.elapsed_time, 4)} seconds\n")
+            for valor in data:
+                file.write(" ".join(map(str, valor)) + "\n")
+            file.write(f"\n\nTime elapsed: {round(self.elapsed_time, self.decimal_time)} seconds\n")
 
 
     def operation(self):
@@ -81,12 +127,11 @@ class ComputeSales:
                 sales_file_name = input("Sales file name: ")
             else:
                 sales_file_name = sys.argv[2]
-            products_file_data = self.get_file_data(products_file_name)
-            print(products_file_data)
-            sales_file_data = self.get_file_data(sales_file_name)
-            #total_sales = self.get_total_sales(products_file_data, sales_file_data)
-            #self.set_print_total_sales(count_words)
-            #self.set_save_total_sales(count_words)
+            data = self.get_file_data(products_file_name)
+            data.update(self.get_file_data(sales_file_name))
+            total_sales = self.get_total_sales(data)
+            self.set_print_total_sales(total_sales)
+            self.set_save_total_sales(total_sales)
         except FileNotFoundError:
             print(f"Error: File '{products_file_name}' or '{sales_file_name}' not found.")
         except ValueError as e:
