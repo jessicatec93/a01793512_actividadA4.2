@@ -65,8 +65,11 @@ class ComputeSales:
             product = [
                 product for product in product_data
                 if product["title"] == sale_data["Product"]
-            ][0]
-            price = product["price"] * sale_data["Quantity"]
+            ]
+            if product:
+                price = product[0]["price"] * sale_data["Quantity"]
+            else:
+                price = 0
             sale = [
                 sale_data["Quantity"], sale_data["Product"],
                 round(price, self.decimal)
@@ -110,22 +113,21 @@ class ComputeSales:
         """
         try:
             if len(sys.argv) != 3:
-                products_file_name = input("Products file name: ")
+                file_name1 = input("Products file name: ")
             else:
-                products_file_name = sys.argv[1]
+                file_name1 = sys.argv[1]
             if len(sys.argv) != 3:
-                sales_file_name = input("Sales file name: ")
+                file_name2 = input("Sales file name: ")
             else:
-                sales_file_name = sys.argv[2]
-            data = self.get_file_data(products_file_name)
-            data.update(self.get_file_data(sales_file_name))
+                file_name2 = sys.argv[2]
+            data = self.get_file_data(file_name1)
+            data.update(self.get_file_data(file_name2))
             total_sales = self.get_total_sales(data)
             self.set_print_total_sales(total_sales)
             self.set_save_total_sales(total_sales)
         except FileNotFoundError:
             print(
-                f"""Error: File '{products_file_name}'
-                 or '{sales_file_name}' not found."""
+                f"""Error: File '{file_name1}' or '{file_name2}' not found."""
             )
         except ValueError as e:
             print(e)
