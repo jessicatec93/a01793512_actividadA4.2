@@ -8,24 +8,6 @@ import json
 import sys
 import time
 
-from typing import TypedDict
-
-class salesJSON(TypedDict):
-    SALE_ID: int
-    SALE_Date: str
-    Product: str
-    Quantity: int
-
-class productJSON(TypedDict):
-    title: str
-    type: str
-    description: str
-    filename: str
-    height: int
-    width: int
-    price: float
-    rating: int
-
 class ComputeSales:
     """
     Class to perform operations from two files that have sales.
@@ -50,12 +32,12 @@ class ComputeSales:
         # Check if the first item in the list is sales or products
         if 'SALE_ID' in data[0]:
             try:
-                objeto_json = {"sales": [salesJSON(**item) for item in data]}
+                objeto_json = {"sales": data}
             except ValueError as e:
                 print("Error al procesar datos de ventas:", e)
         elif 'title' in data[0]:
             try:
-                objeto_json = {"products": [productJSON(**item) for item in data]}
+                objeto_json = {"products": data}
             except ValueError as e:
                 print("Error al procesar datos de productos:", e)
         else:
@@ -81,7 +63,9 @@ class ComputeSales:
                     total = 0
                 order = sale_data["SALE_ID"]
                 results.append(["\n" + sale_data["SALE_Date"], "Order", order])
-            product = [product for product in product_data if product["title"] == sale_data["Product"]][0]
+            product = [
+                product for product in product_data if product["title"] == sale_data["Product"]
+            ][0]
             price = product["price"] * sale_data["Quantity"]
             sale = [sale_data["Quantity"], sale_data["Product"], round(price, self.decimal)]
             results.append(sale)
@@ -98,7 +82,7 @@ class ComputeSales:
         """
         print("\nRESULTS")
         for valor in data:
-               print(" ".join(map(str, valor)) + "\n")
+            print(" ".join(map(str, valor)) + "\n")
         end_time = time.time()
         self.elapsed_time = end_time - self.start_time
         print(f"\nTime elapsed: {round(self.elapsed_time, self.decimal_time)} seconds\n")
